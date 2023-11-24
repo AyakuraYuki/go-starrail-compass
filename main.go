@@ -25,13 +25,16 @@ func Abs(x int) int {
 	return x
 }
 
+// GCD 返回 a、b 两数的最大公约数
 func GCD(a, b int) int {
 	for b != 0 {
 		a, b = b, a%b
 	}
-	return Abs(a)
+	return a
 }
 
+// EGCD 扩展欧几里得算法
+// 返回 a、b 两数的最大公约数 g 同时，找到 x、y，使他们满足贝祖等式 ax + by = GCD(a, b)
 func EGCD(a, b int) (g int, x int, y int) {
 	if b == 0 {
 		return a, 1, 0
@@ -40,14 +43,16 @@ func EGCD(a, b int) (g int, x int, y int) {
 	return g, y, x - (a/b)*y
 }
 
+// ModInv 模数反转
 func ModInv(a, mod int) int {
 	g, x, _ := EGCD(a, mod)
 	if g != 1 {
 		return -1 // 无解
 	}
-	return Rem(x, mod)
+	return Mod(x, mod)
 }
 
+// DeepCopyMatrix 深拷贝矩阵到一个新的矩阵
 func DeepCopyMatrix(src [][]int) (dst [][]int) {
 	dst = make([][]int, len(src))
 	for i := range src {
@@ -57,7 +62,8 @@ func DeepCopyMatrix(src [][]int) (dst [][]int) {
 	return
 }
 
-func Rem(x, mod int) int {
+// Mod 取模运算
+func Mod(x, mod int) int {
 	ret := x % mod
 	if ret < 0 {
 		return ret + mod
@@ -128,17 +134,17 @@ func (gm *GaussMatrix) invResult(row []int, col int) []int {
 	m := gm.mod
 	k := GCD(a, m)
 	for i := col + 1; i < gm.N; i++ {
-		temp := Rem(gm.D[col][i]*row[i], m)
-		b = Rem(b-temp, m)
+		temp := Mod(gm.D[col][i]*row[i], m)
+		b = Mod(b-temp, m)
 	}
 
 	if k == 1 {
-		return []int{Rem(ModInv(a, m)*b, m)}
+		return []int{Mod(ModInv(a, m)*b, m)}
 	} else if k == GCD(k, b) {
 		a /= k
 		b /= k
 		m /= k
-		x0 := Rem(ModInv(a, m)*b, m)
+		x0 := Mod(ModInv(a, m)*b, m)
 		x := make([]int, 0)
 		for i := 0; i < k; i++ {
 			x = append(x, x0+m*i)
@@ -188,7 +194,7 @@ func (gm *GaussMatrix) findMinGCDRowCol(i, j int) []int {
 		for cursor := 0; cursor < len(gm.D[k]); cursor++ {
 			x := gm.D[k][cursor]
 			y := gm.D[kk][cursor]
-			array = append(array, Rem(x+n*y, gm.mod))
+			array = append(array, Mod(x+n*y, gm.mod))
 		}
 		gm.D[k] = array
 	}
@@ -204,7 +210,7 @@ func addMinGCD(a, b, m int) []int {
 	}
 
 	for cursor := 0; cursor < a/gcd; cursor++ {
-		gcd = GCD(Rem(a+cursor*b, m), m)
+		gcd = GCD(Mod(a+cursor*b, m), m)
 		if gcd < result[0] {
 			result[0] = gcd
 			result[1] = cursor
@@ -233,7 +239,7 @@ func (gm *GaussMatrix) mulRow(i, k, j int) {
 	for cursor := 0; cursor < len(gm.D[i]); cursor++ {
 		x := gm.D[k][cursor]
 		y := gm.D[i][cursor]
-		array = append(array, Rem(y-x*mul, gm.mod))
+		array = append(array, Mod(y-x*mul, gm.mod))
 	}
 	gm.D[i] = array
 }
@@ -241,9 +247,9 @@ func (gm *GaussMatrix) mulRow(i, k, j int) {
 func getMul(a, b, m int) int {
 	gcd := GCD(a, m)
 	if gcd == 1 {
-		return Rem(ModInv(a, m)*b, m)
+		return Mod(ModInv(a, m)*b, m)
 	} else if gcd == GCD(gcd, b) {
-		return Rem(ModInv(a/gcd, m/gcd)*(b/gcd), m/gcd)
+		return Mod(ModInv(a/gcd, m/gcd)*(b/gcd), m/gcd)
 	} else {
 		return -1 // 无解
 	}
@@ -253,7 +259,7 @@ func (gm *GaussMatrix) Guess() [][]int {
 	gm.D = DeepCopyMatrix(gm.Matrix)
 	for i := 0; i < gm.Row; i++ {
 		for j := 0; j < gm.Col; j++ {
-			gm.D[i][j] = Rem(gm.Matrix[i][j], gm.mod)
+			gm.D[i][j] = Mod(gm.Matrix[i][j], gm.mod)
 		}
 	}
 
