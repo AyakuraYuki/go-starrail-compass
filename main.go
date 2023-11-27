@@ -5,42 +5,17 @@ import (
 	"github.com/samber/lo"
 )
 
+const MOD = 6
+
 func main() {
-	mod := 6
 	matrix := [][]int{
-		{-1, 0, -1, mod - 4},
-		{-3, -3, 0, mod - 0},
-		{0, 3, 3, mod - 0},
+		{-1, 0, -1, MOD - 4},
+		{-3, -3, 0, MOD - 0},
+		{0, 3, 3, MOD - 0},
 	}
-	gm := NewGaussMatrix(matrix, mod)
+	gm := NewGaussMatrix(matrix, MOD)
 	ret := gm.Guess()
 	fmt.Println(ret[0])
-}
-
-// Abs 返回整数的绝对值
-func Abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-// GCD 返回 a、b 两数的最大公约数
-func GCD(a, b int) int {
-	for b != 0 {
-		a, b = b, a%b
-	}
-	return a
-}
-
-// EGCD 扩展欧几里得算法
-// 返回 a、b 两数的最大公约数 g 同时，找到 x、y，使他们满足贝祖等式 ax + by = GCD(a, b)
-func EGCD(a, b int) (g int, x int, y int) {
-	if b == 0 {
-		return a, 1, 0
-	}
-	g, x, y = EGCD(b, a%b)
-	return g, y, x - (a/b)*y
 }
 
 // ModInv 模数反转
@@ -60,15 +35,6 @@ func DeepCopyMatrix(src [][]int) (dst [][]int) {
 		copy(dst[i], src[i])
 	}
 	return
-}
-
-// Mod 取模运算
-func Mod(x, mod int) int {
-	ret := x % mod
-	if ret < 0 {
-		return ret + mod
-	}
-	return ret
 }
 
 func PrintMatrix(matrix [][]int) {
