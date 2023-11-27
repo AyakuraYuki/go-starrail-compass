@@ -25,6 +25,8 @@
 我已找到了另一个更好的解决引航罗盘谜题的程序，建议前往 [hksr-compass](https://github.com/keybrl/hksr-compass) 这个仓库查看。
 对于我这个代码存在的问题，可能我不会花太多时间去解决，因为目前来看全部引航罗盘谜题中只有一个特例，其他谜题均可以获得结果。
 
+也建议使用 [hksr-compass](https://github.com/keybrl/hksr-compass) 提供的程序，可用性比我这个要改源代码的好很多。
+
 ## 关于 matrix 的格式
 
 ```go
